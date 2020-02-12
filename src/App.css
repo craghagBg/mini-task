@@ -4,14 +4,15 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  p {
-    position: relative;
-    top: 5px;
-    left: 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+}
+
+.poster p {
+  position: relative;
+  top: 5px;
+  left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .form-inline .form-control {
@@ -28,19 +29,19 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    h4 {
-      position: relative;
-      top: 10px;
-      left: 10px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
   }
-
+  .poster h4 {
+    position: relative;
+    top: 10px;
+    left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .form-inline .form-control {
     display: inline-block;
     width: auto;
     vertical-align: middle;
   }
 }
+/*# sourceMappingURL=App.css.map */

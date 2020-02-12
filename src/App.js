@@ -4,13 +4,18 @@ import Header from "./components/header/Header";
 import DashboardContainer from "./components/dashboard/DashboardContainer";
 
 const App = () => {
-  const [filteredName, setFilteredName] = useState("");
+  const [searchName, setSearchName] = useState("");
 
   return (
-    <div className="App">
-      <Header onFilter={e => setFilteredName(e.target.value)} />
-      <DashboardContainer filteredName={filteredName} />
-    </div>
+    <>
+      <Header
+        onSearch={e => {
+          e.preventDefault();
+          setSearchName(e.target.children[0].value);
+        }}
+      />
+      <DashboardContainer searchName={searchName} />
+    </>
   );
 };
 

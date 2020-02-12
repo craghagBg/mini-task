@@ -6,7 +6,7 @@ import constants from "../../constants";
 import Button from "react-bootstrap/Button";
 import Spinner from "react-bootstrap/Spinner";
 
-const DashboardContainer = ({ filteredName }) => {
+const DashboardContainer = ({ searchName }) => {
   const [data, setData] = useState([]);
   const [page, setPage] = useState(0);
 
@@ -21,32 +21,54 @@ const DashboardContainer = ({ filteredName }) => {
         console.log("Api call error " + error);
         throw error;
       });
+    // eslint-disable-next-line
   }, []);
 
-  //   useEffect(() => {}, [filteredName, page]);
-
-  const reddish = el => {
+  const getRGB = el => {
     const str = el.url.split("/");
     const rgb = str[str.length - 1];
-    const r = rgb.slice(0, 2);
-    const g = rgb.slice(2, 4);
-    const b = rgb.slice(4, 6);
+    const r = rgb.slice(0, 2) || "00";
+    const g = rgb.slice(2, 4) || "00";
+    const b = rgb.slice(4, 6) || "00";
 
-    return +("0x" + r) - +("0x" + g) - +("0x" + b);
+    return { r, g, b };
   };
 
-  const showPage = () => {
+  const reddish = el => {
+    const rgb = getRGB(el);
+
+    return +("0x" + rgb.r) - +("0x" + rgb.g) - +("0x" + rgb.b);
+  };
+
+  const isBright = el => {
+    const rgb = getRGB(el);
+
+    return (+("0x" + rgb.r) + +("0x" + rgb.g) + +("0x" + rgb.b)) / 3 > 80;
+  };
+
+  const showPage = data => {
     const pages = (data.length / constants.pageVolume) >> 0;
     return data.slice(page * pages, page * pages + constants.pageVolume);
   };
+
+  const isMobile = () => window.innerWidth < 576;
 
   return (
     <>
       {data.length > 0 ? (
         <>
-          <div className="flex text-center p-3">
-            {showPage().map((poster, id) => (
-              <Poster key={id} poster={poster} />
+          <div className="d-flex justify-content-center flex-wrap mt-5 p-3">
+            {showPage(
+              searchName
+                ? data.filter(el => el.title.includes(searchName))
+                : data
+            ).map((poster, id) => (
+              <Poster
+                key={id}
+                poster={poster}
+                isBright={isBright(poster)}
+                isMobile={isMobile()}
+              />
             ))}
           </div>
           <Button
@@ -59,23 +81,27 @@ const DashboardContainer = ({ filteredName }) => {
           </Button>
         </>
       ) : (
-        <div className="text-center p-5">
-          <Spinner
-            variant="primary"
-            style={{ width: 60, height: 60 }}
-            animation="border"
-            role="status"
-          >
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        <Spinner
+          variant="primary"
+          className="position-fixed"
+          style={{
+            width: 60,
+            height: 60,
+            top: window.innerHeight / 2 - 30,
+            left: window.innerWidth / 2 - 30
+          }}
+          animation="border"
+          role="status"
+        >
+          <span className="sr-only">Loading...</span>
+        </Spinner>
       )}
     </>
   );
 };
 
 DashboardContainer.propTypes = {
-  filteredName: PropTypes.string
+  searchName: PropTypes.string
 };
 
 export default DashboardContainer;
